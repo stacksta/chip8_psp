@@ -11,8 +11,21 @@ class Chip8
         void setMemory(int index, unsigned char value);
         unsigned char getMemory(int index);
 
+        void setRegister(int index, unsigned char value);
+        unsigned char accessRegister(int index);
+
     private:
-        unsigned char memory[MEMORY_SIZE];
+        unsigned char memory[MEMORY_SIZE] {};
+        unsigned char V[16] {};
+
+        unsigned short I{};// 16 bit register
+
+        unsigned char delayTimer {};
+        unsigned char soundTimer {};
+
+        unsigned short PC;// program counter
+
+        unsigned char SP;// stack pointer
 };
 
 
