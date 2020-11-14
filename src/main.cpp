@@ -23,10 +23,21 @@ int main(void)
 	Chip8 chip8;
 	chip8.setMemory(10, 'A');
 
+	//stack tests
+	chip8.push('z');
+	chip8.push('y');
+	
+	auto val = chip8.getStackTop();
+
+	unsigned short val1 = chip8.pop();
+	auto temp1 = chip8.getSP();
+	unsigned short val2 = chip8.pop();
+	auto temp2 = chip8.getSP();
+
 	while(isRunning())
 	{
 		pspDebugScreenSetXY(0, 0);
-		printf("chip8 %c", chip8.getMemory(10));
+		printf("chip8 %c\n\npop: %c SP: %u\npop: %c SP: %u\n %c", chip8.getMemory(10), val1, temp1, val2, temp2, val);
 		sceDisplayWaitVblankStart();
 	}
 
