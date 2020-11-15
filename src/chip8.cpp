@@ -26,19 +26,19 @@ void Chip8::reset()
     }
 }
 
-void Chip8::setMemory(int index, unsigned char value)
+void Chip8::setMemory(int index, uint8_t value)
 {
     assert(index >= 0 && index < MEMORY_SIZE);
     memory[index] = value;
 }
 
-unsigned char Chip8::getMemory(int index)
+uint8_t Chip8::getMemory(int index)
 {
     assert(index >= 0 && index < MEMORY_SIZE);
     return memory[index];
 }
 
-void Chip8::setRegister(int index, unsigned char value)
+void Chip8::setRegister(int index, uint8_t value)
 {
     assert(index >=0 && index < 16);
     V[index] = value;
@@ -50,7 +50,7 @@ unsigned char Chip8::accessRegister(int index)
     return V[index];
 }
 
-void Chip8::push(unsigned short value)
+void Chip8::push(uint16_t value)
 {
     /*  CALL addr
         increment SP,
@@ -63,7 +63,7 @@ void Chip8::push(unsigned short value)
    // PC = value;
 }
 
-unsigned short Chip8::pop()
+uint16_t Chip8::pop()
 {
     /* RET
         PC = stack top,
@@ -76,12 +76,12 @@ unsigned short Chip8::pop()
    return value; 
 }
 
-unsigned short Chip8::getSP()
+uint16_t Chip8::getSP()
 {
     return SP;
 }
 
-unsigned short Chip8::getStackTop()
+uint16_t Chip8::getStackTop()
 {
     return stack[SP];
 }
@@ -95,4 +95,33 @@ void Chip8::setDisplay(int x, int y, bool value)
 bool Chip8::getDisplay(int x, int y)
 {
     return display[y][x];
+}
+
+void Chip8::draw(int x, int y, unsigned char* sprite, int size)
+{
+    /*
+    size = 5
+    "2"	   Binary	Hex
+    ****  11110000  0xF0
+        * 00000001  0x10
+    ****  11110000  0xF0
+    *     10000000  0x80
+    ****  11110000  0xF0
+
+         x1
+         |
+        \/
+    y1-> 11110000
+    */
+    for(int y1 = 0;y1 < size;y1++)
+    {
+        for(int x1 = 0;x1 < 8;x1++) 
+        {
+            if((sprite[y1] & (/*0x80 128*/0b10000000 >> x1)) == 0)
+                continue;
+            
+            
+            display[(y1+y)][(x1+x)] = true;
+        }
+    }
 }

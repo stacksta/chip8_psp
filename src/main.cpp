@@ -34,27 +34,31 @@ int main(void)
 
 
 	Chip8 chip8;
-	chip8.setMemory(10, 'A');
+	//chip8.setMemory(10, 'A');
 
 	//stack tests
 	chip8.push('z');
 	chip8.push('y');
 	
-	auto val = chip8.getStackTop();
+	//auto val = chip8.getStackTop();
 
-	unsigned short val1 = chip8.pop();
+	uint16_t val1 = chip8.pop();
 	auto temp1 = chip8.getSP();
-	unsigned short val2 = chip8.pop();
+	uint16_t val2 = chip8.pop();
 	auto temp2 = chip8.getSP();
 
 	//display test
-	chip8.setDisplay(0, 0, true);
+	//chip8.setDisplay(0, 0, true);
+	//display 420
+	chip8.draw(0, 0, &chip8.memory[20], 5);
+	chip8.draw(10, 0, &chip8.memory[10], 5);
+	chip8.draw(20, 0, &chip8.memory[0], 5);
 
 	while(isRunning())
 	{
 		g2dClear(BLACK);
 
-		sprintf(debug,"chip8 %c\n\npop: %c SP: %u\npop: %c SP: %u\n %c", chip8.getMemory(10), val1, temp1, val2, temp2, val);
+		sprintf(debug,"chip8\n\npop: %c SP: %u\npop: %c SP: %u\n %c", val1, temp1, val2, temp2);
 		intraFontSetStyle(font, 1.f, WHITE,0, 0, INTRAFONT_ALIGN_LEFT);
 		intraFontPrintf(font, 170, 100, debug);
 

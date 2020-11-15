@@ -2,6 +2,7 @@
 #define CHIP8_H
 
 #include <assert.h>
+#include <cstdint>
 
 const int MEMORY_SIZE = 4096;
 const int WIDTH = 64;
@@ -10,7 +11,7 @@ const int SCALE = 10;
 
 
 const int FONTSET_SIZE = 80;
-const unsigned char fontSet[FONTSET_SIZE] = 
+const uint8_t fontSet[FONTSET_SIZE] = 
 {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
     0x20, 0x60, 0x20, 0x20, 0x70, // 1
@@ -37,38 +38,41 @@ class Chip8
 
         void reset();
 
-        void setMemory(int index, unsigned char value);
-        unsigned char getMemory(int index);
+        void setMemory(int index, uint8_t value);
+        uint8_t getMemory(int index);
 
-        void setRegister(int index, unsigned char value);
-        unsigned char accessRegister(int index);
+        void setRegister(int index, uint8_t value);
+        uint8_t accessRegister(int index);
 
         //stack functions
-        void push(unsigned short value);
-        unsigned short pop();
+        void push(uint16_t value);
+        uint16_t  pop();
 
-        unsigned short getSP();
+        uint16_t  getSP();
 
-        unsigned short getStackTop();
+        uint16_t  getStackTop();
 
         //display functions
         void setDisplay(int x, int y, bool value);
         bool getDisplay(int x, int y);
+        void draw(int x, int y, uint8_t* sprite, int size);// Dxyn - DRW Vx, Vy, nibble
+
+        uint8_t memory[MEMORY_SIZE] {};
 
     private:
-        unsigned char memory[MEMORY_SIZE] {};
-        unsigned char V[16] {};
+        //unsigned char memory[MEMORY_SIZE] {};
+        uint8_t V[16] {};
 
-        unsigned short I{};// 16 bit register
+        uint16_t  I{};// 16 bit register
 
-        unsigned short PC {};// program counter
+        uint16_t PC {};// program counter
 
-        unsigned short SP {};// stack pointer
+        uint16_t SP {};// stack pointer
 
-        unsigned char delayTimer {};
-        unsigned char soundTimer {};
+        uint8_t delayTimer {};
+        uint8_t soundTimer {};
 
-        unsigned short stack[16] {};
+        uint16_t stack[16] {};
 
         bool display[HEIGHT][WIDTH] {};
 
