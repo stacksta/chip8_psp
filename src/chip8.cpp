@@ -18,6 +18,12 @@ void Chip8::reset()
 
     delayTimer = 0;
     soundTimer = 0;
+
+    //copy fontset to memory
+    for(int i=0;i<FONTSET_SIZE;i++)
+    {
+        memory[i] = fontSet[i];
+    }
 }
 
 void Chip8::setMemory(int index, unsigned char value)
