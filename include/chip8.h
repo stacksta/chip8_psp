@@ -4,6 +4,9 @@
 #include <assert.h>
 
 const int MEMORY_SIZE = 4096;
+const int WIDTH = 64;
+const int HEIGHT = 32;
+const int SCALE = 10;
 
 class Chip8 
 {
@@ -26,6 +29,9 @@ class Chip8
 
         unsigned short getStackTop();
 
+        //display functions
+        void setDisplay(int x, int y, bool value);
+        bool getDisplay(int x, int y);
 
     private:
         unsigned char memory[MEMORY_SIZE] {};
@@ -41,6 +47,8 @@ class Chip8
         unsigned char soundTimer {};
 
         unsigned short stack[16] {};
+
+        bool display[HEIGHT][WIDTH] {};
 
 };
 

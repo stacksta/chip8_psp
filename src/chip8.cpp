@@ -79,3 +79,14 @@ unsigned short Chip8::getStackTop()
 {
     return stack[SP];
 }
+
+
+void Chip8::setDisplay(int x, int y, bool value)
+{
+    display[y][x] = value;
+}
+
+bool Chip8::getDisplay(int x, int y)
+{
+    return display[y][x];
+}

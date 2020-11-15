@@ -1,15 +1,21 @@
 TARGET = chip8
+GFX = ./include/gLib2D/glib2d.o
+OBJS = ${GFX} ./src/chip8.o ./src/main.o ./src/callback.o
 
-OBJS = ./src/chip8.o ./src/main.o ./src/callback.o
-
-INCDIR += ./include/
+INCDIR += ./include/ ./include/gLib2D/ ./include/intraFont/
 CFLAGS = -G0 -Wall -Os
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 ASFLAGS = $(CFLAGS)
 
-LIBDIR =
+LIBDIR += ./libs/
 LDFLAGS = 
-LIBS= -lstdc++ -lpsprtc -lpspsdk
+LIBS= -lstdc++ -lintrafont -lfreetype -lpng -ljpeg -lg -lGL -lGLU -lglut -lz -lm \
+        -lpspvram -lpspaudio -lpspaudiocodec \
+        -L${PSPDEV}/psp/sdk/lib \
+        -L${PSPDEV}/psp \
+        -lpspdebug  -lpspgum -lpspgu -lpspctrl -lpspge -lpspirkeyb -lpsppower -lpsppower_driver \
+        -lpspdisplay -lpsphprm  -lpspsdk -lpsprtc -lpspaudio -lpsputility \
+        -lpspnet_inet  -lc -lpspuser
 
 
 EXTRA_TARGETS = EBOOT.PBP
