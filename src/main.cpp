@@ -68,6 +68,7 @@ int main(void)
 
 	//delay timer
 	chip8.setDelayTimer(0xFF);
+	chip8.setSoundTimer(0xFF);
 
 	while(isRunning())
 	{
@@ -103,6 +104,18 @@ int main(void)
 			tickLast = tickNow;
 			sprintf(fpsText,"FPS: %f",fps);
 			fps = 0;
+
+			if(chip8.getDelayTimer() > 0)
+			{
+				chip8.setDelayTimer(chip8.getDelayTimer() - 1);
+				intraFontPrintf(font, 200, 200, "delay");
+			}
+			if(chip8.getSoundTimer() > 0)
+			{
+				chip8.setSoundTimer(chip8.getSoundTimer() - 1);
+				intraFontPrintf(font, 200, 250, "sound");
+			}
+
 		}
 		intraFontPrintf(font, 375, 20, fpsText);
 

@@ -136,3 +136,14 @@ uint8_t Chip8::getDelayTimer()
 {
     return delayTimer;
 }
+
+
+void Chip8::setSoundTimer(uint8_t value)
+{
+    soundTimer = value;
+}
+
+uint8_t Chip8::getSoundTimer()
+{
+    return soundTimer;
+}
