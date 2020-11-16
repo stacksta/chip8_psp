@@ -13,7 +13,7 @@ void Chip8::reset()
         stack[i] = 0;
     }
     I = 0;
-    PC = 0;
+    PC = START_ADDRESS;
     SP = 0;
 
     delayTimer = 0;
@@ -113,6 +113,13 @@ void Chip8::draw(int x, int y, unsigned char* sprite, int size)
         \/
     y1-> 11110000
     */
+
+   //wrap around
+    // uint8_t xPos = V[x] % WIDTH;
+    // uint8_t yPos = V[y] % HEIGHT;
+
+    V[0xF] = 0;
+
     for(int y1 = 0;y1 < size;y1++)
     {
         for(int x1 = 0;x1 < 8;x1++) 
@@ -120,8 +127,12 @@ void Chip8::draw(int x, int y, unsigned char* sprite, int size)
             if((sprite[y1] & (/*0x80 128*/0b10000000 >> x1)) == 0)
                 continue;
             
+            if(display[(y1+y) % HEIGHT][(x1+x) % WIDTH])
+            {
+                V[0xF] = 1;
+            }
             
-            display[(y1+y)][(x1+x)] = true;
+            display[(y1+y) % HEIGHT][(x1+x) % WIDTH] ^= true;
         }
     }
 }
@@ -146,4 +157,115 @@ void Chip8::setSoundTimer(uint8_t value)
 uint8_t Chip8::getSoundTimer()
 {
     return soundTimer;
+}
+
+bool Chip8::loadRom(const char* filename)
+{
+    //open the rom as binary stream and move file pointer to the end
+    std::ifstream rom(filename, std::ios::binary|std::ios::ate);
+
+    if(rom.is_open())
+    {
+        //get the rom size
+        std::streampos size = rom.tellg();
+        char* buffer = new char[size];
+
+        //go back to the beginning of the file and fill the buffer
+        rom.seekg(0, std::ios::beg);
+        rom.read(buffer, size);
+        rom.close();
+
+        //load roms contents to chip8's memory
+        for(auto i=0;i<size;i++)
+        {
+            memory[START_ADDRESS + i] = buffer[i];
+        }
+        //free buffer
+        delete[] buffer;
+        return true;
+    }
+    return false;
+
+}
+
+uint16_t Chip8::getWord(int index)
+{
+    uint8_t byte1 = memory[index];
+    uint8_t byte2 = memory[index+1];
+    return byte1 << 8| byte2;
+}
+
+void Chip8::decodeAndDecode(uint16_t opcode)
+{
+    uint16_t nnn = opcode & 0x0fff;
+    switch(opcode & 0xf000)
+    {
+        case 0x1000: 
+                    // 1nnn: JP addr
+                    //uint16_t nnn = opcode & 0x0fff;
+                    PC = nnn;
+                    break; 
+        case 0x2000:
+                    // 2nnn: CALL addr
+                    push(PC);
+                    PC = nnn;
+                    break;
+
+        case 0x6000:
+                    // 6xkk: LD Vx, byte (Vx = byte (kk))
+                    {
+                        uint8_t reg = (opcode & 0x0F00) >> 8;
+                        uint16_t kk = opcode & 0x00FF;
+                        V[reg] = kk;
+                        break;
+                    }
+
+        case 0x7000:
+                    // 7xkk: ADD Vx, byte (Vx = Vx + kk)
+                    {
+                        uint8_t reg = (opcode & 0x0F00) >> 8;
+                        uint16_t kk = opcode & 0x00FF;
+                        V[reg] = V[reg] + kk;
+                    }
+                    break;
+        
+        case 0xA000:
+                    // Annn: LD I, addr (I = nnn)
+                    {
+                        uint16_t nnn = opcode & 0x0FFF;
+                        I = nnn;
+                    }
+                    break;
+
+        case 0xD000:
+                    // Dxyn: DRW Vx, Vy nibble
+                    {
+                        uint8_t x = (opcode & 0xF00) >> 8;
+                        uint8_t y = (opcode & 0xF0) >> 4;
+                        uint8_t size = opcode & 0x000F;
+
+                        draw(V[x], V[y], &memory[I], size);
+
+                    }
+                    break; 
+    }
+}
+
+void Chip8::execute(uint16_t opcode)
+{
+    switch(opcode)
+    {
+        case 0x00E0:
+                    //clear screen
+                    memset(display, 0, sizeof(display));
+                    break;
+        
+        case 0x00EE:
+                    //RET
+                    PC = pop();
+                    break;
+
+        default:
+            decodeAndDecode(opcode);
+    }
 }

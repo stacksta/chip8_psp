@@ -24,7 +24,7 @@ PSP_HEAP_SIZE_MAX();
 
 int main(void) 
 {       
-	pspDebugScreenInit();
+	//pspDebugScreenInit();
 	setupExitCallback();
 
 	g2dInit();
@@ -42,22 +42,22 @@ int main(void)
 	uint32_t tickResolution {};
 
 
-	char debug[256] = "debug text";
+	//char debug[256] = "debug text";
 
 
 	Chip8 chip8;
 	//chip8.setMemory(10, 'A');
 
 	//stack tests
-	chip8.push('z');
-	chip8.push('y');
+	//chip8.push('z');
+	//chip8.push('y');
 	
 	//auto val = chip8.getStackTop();
 
-	uint16_t val1 = chip8.pop();
-	auto temp1 = chip8.getSP();
-	uint16_t val2 = chip8.pop();
-	auto temp2 = chip8.getSP();
+	// uint16_t val1 = chip8.pop();
+	// auto temp1 = chip8.getSP();
+	// uint16_t val2 = chip8.pop();
+	// auto temp2 = chip8.getSP();
 
 	//display test
 	//chip8.setDisplay(0, 0, true);
@@ -67,8 +67,10 @@ int main(void)
 	chip8.draw(20, 0, &chip8.memory[0], 5);
 
 	//delay timer
-	chip8.setDelayTimer(0xFF);
-	chip8.setSoundTimer(0xFF);
+	//chip8.setDelayTimer(0xFF);
+	//chip8.setSoundTimer(0xFF);
+
+	bool rom = chip8.loadRom("./roms/IBM Logo.ch8");
 
 	while(isRunning())
 	{
@@ -76,9 +78,11 @@ int main(void)
 
 		g2dClear(BLACK);
 
-		sprintf(debug,"chip8\n\npop: %c SP: %u\npop: %c SP: %u\n %c", val1, temp1, val2, temp2);
-		intraFontSetStyle(font, 1.f, WHITE,0, 0, INTRAFONT_ALIGN_LEFT);
-		intraFontPrintf(font, 170, 100, debug);
+		//sprintf(debug,"chip8\n\npop: %c SP: %u\npop: %c SP: %u\n %c", val1, temp1, val2, temp2);
+		// sprintf(debug,"loaded");
+		// intraFontSetStyle(font, 1.f, WHITE,0, 0, INTRAFONT_ALIGN_LEFT);
+		// if(rom)
+		// 	intraFontPrintf(font, 170, 100, debug);
 
 		for(int x = 0; x < WIDTH; x++)
 		{
@@ -117,8 +121,11 @@ int main(void)
 			}
 
 		}
-		intraFontPrintf(font, 375, 20, fpsText);
+		uint16_t opcode = chip8.getWord(chip8.PC);		
+		chip8.PC += 2;
+		chip8.execute(opcode);
 
+		intraFontPrintf(font, 375, 20, fpsText);
 
 		g2dFlip(G2D_VSYNC);
 

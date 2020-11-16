@@ -3,12 +3,15 @@
 
 #include <assert.h>
 #include <cstdint>
+#include <cstring>
+#include <fstream>
 
 const int MEMORY_SIZE = 4096;
 const int WIDTH = 64;
 const int HEIGHT = 32;
-const int SCALE = 10;
+const int SCALE = 5;
 
+const unsigned int START_ADDRESS = 0x200;
 
 const int FONTSET_SIZE = 80;
 const uint8_t fontSet[FONTSET_SIZE] = 
@@ -66,13 +69,23 @@ class Chip8
         void setSoundTimer(uint8_t value);
         uint8_t getSoundTimer();
 
+        //load rom
+        bool loadRom(const char* filename);
+
+        uint16_t getWord(int index);
+        void execute(uint16_t opcode);
+        void decodeAndDecode(uint16_t opcode);
+
+
+        uint16_t PC {};// program counter
+
     private:
         //unsigned char memory[MEMORY_SIZE] {};
         uint8_t V[16] {};
 
         uint16_t  I{};// 16 bit register
 
-        uint16_t PC {};// program counter
+        // uint16_t PC {};// program counter
 
         uint16_t SP {};// stack pointer
 
