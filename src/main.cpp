@@ -1,5 +1,8 @@
 #include <pspkernel.h>
 #include <pspdebug.h>
+#include <psptypes.h>
+#include <time.h>
+#include <psprtc.h>
 
 #include <pspgu.h>
 #include <pspgum.h>
@@ -30,6 +33,15 @@ int main(void)
 	intraFont* font;
 	font = intraFontLoad("flash0:/font/ltn8.pgf",0);
 
+	//fps
+	float fps {};
+	char fpsText[25] {};
+	uint64_t tickNow {};
+	uint64_t tickLast {};
+
+	uint32_t tickResolution {};
+
+
 	char debug[256] = "debug text";
 
 
@@ -54,8 +66,13 @@ int main(void)
 	chip8.draw(10, 0, &chip8.memory[10], 5);
 	chip8.draw(20, 0, &chip8.memory[0], 5);
 
+	//delay timer
+	chip8.setDelayTimer(0xFF);
+
 	while(isRunning())
 	{
+		tickResolution = static_cast<float>(sceRtcGetTickResolution());
+
 		g2dClear(BLACK);
 
 		sprintf(debug,"chip8\n\npop: %c SP: %u\npop: %c SP: %u\n %c", val1, temp1, val2, temp2);
@@ -77,6 +94,18 @@ int main(void)
 				}
 			}
 		}
+
+		fps++;
+		sceRtcGetCurrentTick(&tickNow);
+
+		if(((tickNow - tickLast)/((float)tickResolution)) >= 1.0f)
+		{
+			tickLast = tickNow;
+			sprintf(fpsText,"FPS: %f",fps);
+			fps = 0;
+		}
+		intraFontPrintf(font, 375, 20, fpsText);
+
 
 		g2dFlip(G2D_VSYNC);
 

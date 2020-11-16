@@ -125,3 +125,14 @@ void Chip8::draw(int x, int y, unsigned char* sprite, int size)
         }
     }
 }
+
+
+void Chip8::setDelayTimer(uint8_t value)
+{
+    delayTimer = value;
+}
+
+uint8_t Chip8::getDelayTimer()
+{
+    return delayTimer;
+}

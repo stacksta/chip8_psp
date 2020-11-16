@@ -59,6 +59,10 @@ class Chip8
 
         uint8_t memory[MEMORY_SIZE] {};
 
+        //timer
+        void setDelayTimer(uint8_t value);
+        uint8_t getDelayTimer();
+
     private:
         //unsigned char memory[MEMORY_SIZE] {};
         uint8_t V[16] {};
