@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <cstdint>
 #include <cstring>
+#include <cstdlib>
+#include <ctime>
 #include <fstream>
 
 const int MEMORY_SIZE = 4096;

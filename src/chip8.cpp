@@ -24,6 +24,10 @@ void Chip8::reset()
     {
         memory[i] = fontSet[i];
     }
+
+    //for random number generation
+    time_t t;
+    srand((unsigned)time(&t));
 }
 
 void Chip8::setMemory(int index, uint8_t value)
@@ -355,6 +359,25 @@ void Chip8::decodeAndDecode(uint16_t opcode)
                     {
                         uint16_t nnn = opcode & 0x0FFF;
                         I = nnn;
+                    }
+                    break;
+
+        case 0xB000:
+                    // Bnnn: JP V0, addr (jmp nnn + 40)
+                    {
+                        uint16_t nnn = opcode & 0xFFF;
+                        PC += nnn + V[0];
+                    }
+                    break;
+        
+        case 0xC000:
+                    // RND Vx, byte
+                    {
+                        //generate random number between 0-255
+                        uint8_t random = rand() % 256;
+                        uint8_t x = (opcode & 0x0F00) >> 8;
+                        uint8_t kk = opcode & 0x00FF;
+                        V[x] = random & kk;
                     }
                     break;
 
