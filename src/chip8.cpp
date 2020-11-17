@@ -211,6 +211,36 @@ void Chip8::decodeAndDecode(uint16_t opcode)
                     PC = nnn;
                     break;
 
+        case 0x3000:
+                    // 3xkk: SE Vx, byte
+                    {
+                        uint8_t reg = (opcode & 0x0F00) >> 8;
+                        uint8_t byte = (opcode & 0x0FF);
+                        if(V[reg] == byte)
+                            PC += 2;
+                        break;
+                    }
+
+        case 0x4000:
+                    // 4xkk: SNE Vx, byte
+                    {
+                        uint8_t reg = (opcode & 0x0F00) >> 8;
+                        uint16_t byte = (opcode & 0x0FF);
+                        if(V[reg] != byte)
+                            PC += 2;
+                        break;
+                    }
+
+        case 0x5000:
+                    // 5xy0: SE Vx, Vy
+                    {
+                        uint8_t reg1 = (opcode & 0x0F00) >> 8;
+                        uint8_t reg2 = (opcode & 0x00F0) >> 4;
+                        if(V[reg1] == V[reg2])
+                            PC += 2;
+                        break;
+                    }
+
         case 0x6000:
                     // 6xkk: LD Vx, byte (Vx = byte (kk))
                     {
@@ -228,6 +258,97 @@ void Chip8::decodeAndDecode(uint16_t opcode)
                         V[reg] = V[reg] + kk;
                     }
                     break;
+
+        case 0x8000:
+                    {
+                        // 8xy_  _ -> z
+                        uint8_t x = (opcode & 0x0F00) >> 8;
+                        uint8_t y = (opcode & 0x00F0) >> 4;
+                        uint8_t z = (opcode & 0x000F);
+
+                        // 8xy0: LD Vx, Vy
+                        if(z == 0)
+                        {
+                            V[x] = V[y];
+                        }
+                        // 8xy1: OR Vx, Vy
+                        else if(z == 1)
+                        {
+                            V[x] = V[x] | V[y];
+                        }
+                        // 8xy2: AND Vx, Vy
+                        else if(z == 2)
+                        {
+                            V[x] = V[x] & V[y];
+                        }
+                        // 8xy3: XOR Vx, Vy
+                        else if(z == 3)
+                        {
+                            V[x] = V[x] ^ V[y];
+                        }
+                        // 8xy4: ADD Vx, Vy
+                        else if(z == 4)
+                        {
+                            V[x] = V[x] + V[y];
+                            if(V[x] > 0xFF) // > 255
+                                V[0xF] = 1;
+                            else 
+                                V[0xF] = 0;
+                            //only the lowest 8bits of the result are kept,
+                            V[x] = V[x] & 0x00FF;
+                        }
+                        // 8xy5: SUB Vx, Vy
+                        else if(z == 5)
+                        {
+                            if(V[x] > V[y])
+                                V[0xF] = 1;
+                            else 
+                                V[0xF] = 0;
+                            V[x] = V[x] - V[y];
+                        }
+                        // 8xy6: SHR Vx {, Vy}
+                        else if(z == 6)
+                        {
+                            uint8_t lsb = opcode & 0x000F;
+                            if(lsb == 1)
+                                V[0xF] = 1;
+                            else 
+                                V[0xF] = 0;
+                            V[x] = V[x] / 2;
+                        }
+                        // 8xy7: SUBN Vx, Vy
+                        else if(z == 7)
+                        {
+                            if(V[y] > V[x])
+                                V[0xF] = 1;
+                            else 
+                                V[0xF] = 0;
+                            V[x] = V[y] - V[x];
+                        }
+                        // 8xyE: SHL Vx {, Vy}
+                        else if(z == 0xE)
+                        {
+                            uint8_t msb = x;//;(opcode & 0x0F00) >> 8;
+                            if(msb == 1)
+                                V[0xF] = 1;
+                            else 
+                                V[0xF] = 0;
+                            V[x] = V[x] * 2;
+                        }
+                        break;
+                    }
+
+        case 0x9000:
+                    // 9xy0: SNE Vx, Vy
+                    {
+                        uint8_t x = (opcode & 0x0F00) >> 8;
+                        uint8_t y = (opcode & 0x00F0) >> 4;
+                        
+                        if(V[x] != V[y])
+                            PC += 2;
+                        
+                        break;
+                    }
         
         case 0xA000:
                     // Annn: LD I, addr (I = nnn)

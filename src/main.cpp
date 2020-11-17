@@ -62,15 +62,15 @@ int main(void)
 	//display test
 	//chip8.setDisplay(0, 0, true);
 	//display 420
-	chip8.draw(0, 0, &chip8.memory[20], 5);
-	chip8.draw(10, 0, &chip8.memory[10], 5);
-	chip8.draw(20, 0, &chip8.memory[0], 5);
+	// chip8.draw(0, 0, &chip8.memory[20], 5);
+	// chip8.draw(10, 0, &chip8.memory[10], 5);
+	// chip8.draw(20, 0, &chip8.memory[0], 5);
 
 	//delay timer
 	//chip8.setDelayTimer(0xFF);
 	//chip8.setSoundTimer(0xFF);
 
-	bool rom = chip8.loadRom("./roms/IBM Logo.ch8");
+	bool rom = chip8.loadRom("./roms/test_opcode.ch8");//"./roms/IBM Logo.ch8");
 
 	while(isRunning())
 	{
