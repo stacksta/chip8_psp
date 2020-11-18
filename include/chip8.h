@@ -11,7 +11,7 @@
 const int MEMORY_SIZE = 4096;
 const int WIDTH = 64;
 const int HEIGHT = 32;
-const int SCALE = 5;
+const int SCALE = 4;
 
 const unsigned int START_ADDRESS = 0x200;
 

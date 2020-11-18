@@ -103,11 +103,11 @@ int main(void)
 		fps++;
 		sceRtcGetCurrentTick(&tickNow);
 
-		if(((tickNow - tickLast)/((float)tickResolution)) >= 1.0f)
-		{
-			tickLast = tickNow;
-			sprintf(fpsText,"FPS: %f",fps);
-			fps = 0;
+		// if(((tickNow - tickLast)/((float)tickResolution)) >= 1.0f)
+		// {
+		// 	tickLast = tickNow;
+		// 	sprintf(fpsText,"FPS: %f",fps);
+		// 	fps = 0;
 
 			if(chip8.getDelayTimer() > 0)
 			{
@@ -120,7 +120,7 @@ int main(void)
 				intraFontPrintf(font, 200, 250, "sound");
 			}
 
-		}
+		//}
 		uint16_t opcode = chip8.getWord(chip8.PC);		
 		chip8.PC += 2;
 		chip8.execute(opcode);
