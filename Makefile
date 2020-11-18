@@ -3,7 +3,7 @@ GFX = ./include/gLib2D/glib2d.o
 OBJS = ${GFX} ./src/chip8.o ./src/main.o ./src/callback.o
 
 INCDIR += ./include/ ./include/gLib2D/ ./include/intraFont/
-CFLAGS = -G0 -Wall -Os
+CFLAGS = -G0 -Wall -O3
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 ASFLAGS = $(CFLAGS)
 
@@ -14,7 +14,7 @@ LIBS= -lstdc++ -lintrafont -lfreetype -lpng -ljpeg -lg -lGL -lGLU -lglut -lz -lm
         -L${PSPDEV}/psp/sdk/lib \
         -L${PSPDEV}/psp \
         -lpspdebug  -lpspgum -lpspgu -lpspctrl -lpspge -lpspirkeyb -lpsppower -lpsppower_driver \
-        -lpspdisplay -lpsphprm  -lpspsdk -lpsprtc -lpspaudio -lpsputility \
+        -lpspdisplay -lpsphprm  -lpspsdk -lpsprtc -lpsputility \
         -lpspnet_inet  -lc -lpspuser
 
 

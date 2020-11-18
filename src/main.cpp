@@ -7,6 +7,9 @@
 #include <pspgu.h>
 #include <pspgum.h>
 
+#include <pspaudiolib.h>
+#include <pspaudio.h>
+
 #include <cstdio>
 
 #include "callback.h"
@@ -32,6 +35,13 @@ int main(void)
 	intraFontInit();
 	intraFont* font;
 	font = intraFontLoad("flash0:/font/ltn8.pgf",0);
+
+	//audio
+	unsigned int audioData[256];
+	memset(audioData, 100, sizeof(audioData));
+	int channel = sceAudioChReserve(PSP_AUDIO_NEXT_CHANNEL, sizeof(audioData), PSP_AUDIO_FORMAT_STEREO);
+	sceAudioSetChannelDataLen(channel, sizeof(audioData));
+	sceAudioChangeChannelVolume(channel, PSP_VOLUME_MAX, PSP_VOLUME_MAX);
 
 	//fps
 	float fps {};
@@ -70,7 +80,7 @@ int main(void)
 	//chip8.setDelayTimer(0xFF);
 	//chip8.setSoundTimer(0xFF);
 
-	bool rom = chip8.loadRom("./roms/test_opcode.ch8"); //"./roms/IBM Logo.ch8");
+	bool rom = chip8.loadRom("./roms/PONG"); //"./roms/IBM Logo.ch8");
 
 	while(isRunning())
 	{
@@ -117,7 +127,9 @@ int main(void)
 			if(chip8.getSoundTimer() > 0)
 			{
 				chip8.setSoundTimer(chip8.getSoundTimer() - 1);
-				intraFontPrintf(font, 200, 250, "sound");
+				//intraFontPrintf(font, 200, 250, "sound");
+				sceAudioOutput(channel, PSP_VOLUME_MAX, audioData);
+
 			}
 
 		//}
