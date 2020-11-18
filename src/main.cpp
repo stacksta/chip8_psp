@@ -70,7 +70,7 @@ int main(void)
 	//chip8.setDelayTimer(0xFF);
 	//chip8.setSoundTimer(0xFF);
 
-	bool rom = chip8.loadRom("./roms/test_opcode.ch8");//"./roms/IBM Logo.ch8");
+	bool rom = chip8.loadRom("./roms/test_opcode.ch8"); //"./roms/IBM Logo.ch8");
 
 	while(isRunning())
 	{

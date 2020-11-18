@@ -339,8 +339,9 @@ void Chip8::decodeAndDecode(uint16_t opcode)
                                 V[0xF] = 0;
                             V[x] = V[x] * 2;
                         }
-                        break;
                     }
+                    break;
+
 
         case 0x9000:
                     // 9xy0: SNE Vx, Vy
@@ -350,9 +351,9 @@ void Chip8::decodeAndDecode(uint16_t opcode)
                         
                         if(V[x] != V[y])
                             PC += 2;
-                        
-                        break;
+             
                     }
+                    break;
         
         case 0xA000:
                     // Annn: LD I, addr (I = nnn)
@@ -392,6 +393,87 @@ void Chip8::decodeAndDecode(uint16_t opcode)
 
                     }
                     break; 
+        
+        case 0xE000:
+                    {
+                        uint8_t x = (opcode & 0x0F00) >> 8;
+                        //TODO
+                    }
+                    break;
+
+        case 0xF000:
+                    {
+                       uint8_t x = (opcode & 0x0F00) >> 8;
+                       uint8_t byte = opcode & 0x00FF;
+
+                        // Fx07 - LD Vx, DT
+                       if(byte == 0x07)
+                       {
+                           V[x] = delayTimer;
+                       }
+                       // Fx0A - LD Vx, K
+                       else if(byte == 0x0A)
+                       {
+                           //TODO
+                       }
+                       // Fx15 - LD DT, Vx
+                       else if(byte == 0x15)
+                       {
+                           delayTimer = V[x];
+                       }
+                       // Fx18 - LD ST, Vx
+                       else if(byte == 0x18)
+                       {
+                           soundTimer = V[x];
+                       }
+                       // Fx1E - ADD I, Vx
+                       else if(byte == 0x1E)
+                       {
+                           //set VF to 1 when range overflow if
+                           if(I + V[x] > 0xFFF)
+                                V[0xF] = 1;
+                           else 
+                                V[0xF] = 0;
+                            I += V[x];
+                       }
+                       // Fx29 - LD F, Vx
+                       else if(byte == 0x29)
+                       {
+                           I = V[x] * 0x5;
+                       }
+                       // Fx33 - LD B, Vx
+                       else if(byte == 0x33)
+                       {
+                           //bcd
+                           //extract the digits
+                            memory[I + 2] = V[x] % 10;
+                            V[x] = V[x] / 10;
+
+                            memory[I + 1] = V[x] % 10;
+                            V[x] = V[x] / 10;
+
+                            memory[I] = V[x] % 10;
+                       }
+                       // Fx55 - LD [I], Vx
+                       else if(byte == 0x55)
+                       {
+                           for(uint8_t i = 0;i <= x;i++)
+                           {
+                               memory[I + i] = V[i];
+                           }
+                           I += x + 1;// when the operation is done, I = I + X + 1
+                       }
+                       // Fx65 - LD Vx, [I]
+                       else if(byte == 0x65)
+                       {
+                           for(uint8_t i=0;i <= x; i++)
+                           {
+                               V[i] = memory[I + i];
+                           }
+                           I += x + 1;// when the operation is done, I = I + X + 1
+                       }
+                    }
+                    break;
     }
 }
 
