@@ -56,31 +56,7 @@ int main(void)
 
 
 	Chip8 chip8;
-	//chip8.setMemory(10, 'A');
-
-	//stack tests
-	//chip8.push('z');
-	//chip8.push('y');
-	
-	//auto val = chip8.getStackTop();
-
-	// uint16_t val1 = chip8.pop();
-	// auto temp1 = chip8.getSP();
-	// uint16_t val2 = chip8.pop();
-	// auto temp2 = chip8.getSP();
-
-	//display test
-	//chip8.setDisplay(0, 0, true);
-	//display 420
-	// chip8.draw(0, 0, &chip8.memory[20], 5);
-	// chip8.draw(10, 0, &chip8.memory[10], 5);
-	// chip8.draw(20, 0, &chip8.memory[0], 5);
-
-	//delay timer
-	//chip8.setDelayTimer(0xFF);
-	//chip8.setSoundTimer(0xFF);
-
-	bool rom = chip8.loadRom("./roms/PONG"); //"./roms/IBM Logo.ch8");
+	bool rom = chip8.loadRom("./roms/PONG");
 
 	while(isRunning())
 	{
@@ -102,7 +78,7 @@ int main(void)
 				{
 					g2dBeginRects(NULL);
 					g2dSetColor(WHITE);
-					g2dSetCoordXY(x * SCALE, y * SCALE);
+					g2dSetCoordXY(x * SCALE, (y + 12) * SCALE);
 					g2dSetScaleWH(SCALE, SCALE);
 					g2dAdd();
 					g2dEnd();
@@ -113,16 +89,17 @@ int main(void)
 		fps++;
 		sceRtcGetCurrentTick(&tickNow);
 
-		// if(((tickNow - tickLast)/((float)tickResolution)) >= 1.0f)
-		// {
-		// 	tickLast = tickNow;
-		// 	sprintf(fpsText,"FPS: %f",fps);
-		// 	fps = 0;
+		if(((tickNow - tickLast)/((float)tickResolution)) >= 1.0f)
+		{
+			tickLast = tickNow;
+			sprintf(fpsText,"FPS: %f",fps);
+			fps = 0;
+		}
 
 			if(chip8.getDelayTimer() > 0)
 			{
 				chip8.setDelayTimer(chip8.getDelayTimer() - 1);
-				intraFontPrintf(font, 200, 200, "delay");
+				//intraFontPrintf(font, 200, 200, "delay");
 			}
 			if(chip8.getSoundTimer() > 0)
 			{
@@ -137,6 +114,7 @@ int main(void)
 		chip8.PC += 2;
 		chip8.execute(opcode);
 
+		intraFontSetStyle(font, 1.f, WHITE,0, 0, INTRAFONT_ALIGN_LEFT);
 		intraFontPrintf(font, 375, 20, fpsText);
 
 		g2dFlip(G2D_VSYNC);
