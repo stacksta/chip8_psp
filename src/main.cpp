@@ -62,13 +62,15 @@ int main(void)
 	{
 		tickResolution = static_cast<float>(sceRtcGetTickResolution());
 
-		g2dClear(BLACK);
+		g2dClear(0x532B1D);//0x1D2B53
 
 		//sprintf(debug,"chip8\n\npop: %c SP: %u\npop: %c SP: %u\n %c", val1, temp1, val2, temp2);
 		// sprintf(debug,"loaded");
 		// intraFontSetStyle(font, 1.f, WHITE,0, 0, INTRAFONT_ALIGN_LEFT);
 		// if(rom)
 		// 	intraFontPrintf(font, 170, 100, debug);
+
+
 
 		for(int x = 0; x < WIDTH; x++)
 		{
@@ -78,7 +80,16 @@ int main(void)
 				{
 					g2dBeginRects(NULL);
 					g2dSetColor(WHITE);
-					g2dSetCoordXY(x * SCALE, (y + 12) * SCALE);
+					g2dSetCoordXY((x + 5)* SCALE, (y + 12) * SCALE);
+					g2dSetScaleWH(SCALE, SCALE);
+					g2dAdd();
+					g2dEnd();
+				}
+				else 
+				{
+					g2dBeginRects(NULL);
+					g2dSetColor(BLACK);
+					g2dSetCoordXY((x + 5) * SCALE, (y + 12) * SCALE);
 					g2dSetScaleWH(SCALE, SCALE);
 					g2dAdd();
 					g2dEnd();
@@ -116,6 +127,9 @@ int main(void)
 
 		intraFontSetStyle(font, 1.f, WHITE,0, 0, INTRAFONT_ALIGN_LEFT);
 		intraFontPrintf(font, 375, 20, fpsText);
+
+		intraFontSetStyle(font, 1.f, WHITE,0, 0, INTRAFONT_ALIGN_LEFT);
+		intraFontPrintf(font, 120, 240, "Chip8 Emulator");
 
 		g2dFlip(G2D_VSYNC);
 
