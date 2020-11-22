@@ -69,7 +69,15 @@ int main(void)
 		// intraFontSetStyle(font, 1.f, WHITE,0, 0, INTRAFONT_ALIGN_LEFT);
 		// if(rom)
 		// 	intraFontPrintf(font, 170, 100, debug);
-
+		
+		//side panel
+		
+		g2dBeginRects(NULL);
+		g2dSetColor(0xFF9C7683);//#83769C 
+		g2dSetCoordXY(350, 0);
+		g2dSetScaleWH(130, 272);
+		g2dAdd();
+		g2dEnd();
 
 
 		for(int x = 0; x < WIDTH; x++)
@@ -80,7 +88,7 @@ int main(void)
 				{
 					g2dBeginRects(NULL);
 					g2dSetColor(WHITE);
-					g2dSetCoordXY((x + 5)* SCALE, (y + 12) * SCALE);
+					g2dSetCoordXY((x + 3)* SCALE, (y + 12) * SCALE);
 					g2dSetScaleWH(SCALE, SCALE);
 					g2dAdd();
 					g2dEnd();
@@ -89,7 +97,7 @@ int main(void)
 				{
 					g2dBeginRects(NULL);
 					g2dSetColor(BLACK);
-					g2dSetCoordXY((x + 5) * SCALE, (y + 12) * SCALE);
+					g2dSetCoordXY((x + 3) * SCALE, (y + 12) * SCALE);
 					g2dSetScaleWH(SCALE, SCALE);
 					g2dAdd();
 					g2dEnd();
@@ -125,7 +133,7 @@ int main(void)
 		chip8.PC += 2;
 		chip8.execute(opcode);
 
-		intraFontSetStyle(font, 1.f, WHITE,0, 0, INTRAFONT_ALIGN_LEFT);
+		intraFontSetStyle(font, 1.f, 0xFF518700,0, 0, INTRAFONT_ALIGN_LEFT);
 		intraFontPrintf(font, 375, 20, fpsText);
 
 		intraFontSetStyle(font, 1.f, WHITE,0, 0, INTRAFONT_ALIGN_LEFT);
