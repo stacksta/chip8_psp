@@ -13,7 +13,7 @@ LIBS= -lstdc++ -lintrafont -lfreetype -lpng -ljpeg -lg -lGL -lGLU -lglut -lz -lm
         -lpspvram -lpspaudio -lpspaudiocodec \
         -L${PSPDEV}/psp/sdk/lib \
         -L${PSPDEV}/psp \
-        -lpspdebug  -lpspgum -lpspgu -lpspctrl -lpspge -lpspirkeyb -lpsppower -lpsppower_driver \
+        -lpspdebug  -lpspgum -lpspgu -lpspctrl -lpspge -lpsppower -lpsppower_driver \
         -lpspdisplay -lpsphprm  -lpspsdk -lpsprtc -lpsputility \
         -lpspnet_inet  -lc -lpspuser
 
